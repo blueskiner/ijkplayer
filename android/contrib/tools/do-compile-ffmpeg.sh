@@ -68,10 +68,10 @@ echo "--------------------"
 echo "[*] make NDK standalone toolchain"
 echo "--------------------"
 . ./tools/do-detect-env.sh
-FF_MAKE_TOOLCHAIN_FLAGS=$IJK_MAKE_TOOLCHAIN_FLAGS
-FF_MAKE_FLAGS=$IJK_MAKE_FLAG
-FF_GCC_VER=$IJK_GCC_VER
-FF_GCC_64_VER=$IJK_GCC_64_VER
+FF_MAKE_TOOLCHAIN_FLAGS=$NAX_MAKE_TOOLCHAIN_FLAGS
+FF_MAKE_FLAGS=$NAX_MAKE_FLAG
+FF_GCC_VER=$NAX_GCC_VER
+FF_GCC_64_VER=$NAX_GCC_64_VER
 
 
 #----- armv7a begin -----
@@ -347,11 +347,11 @@ do
 done
 
 $CC -lm -lz -shared --sysroot=$FF_SYSROOT -Wl,--no-undefined -Wl,-z,noexecstack $FF_EXTRA_LDFLAGS \
-    -Wl,-soname,libijkffmpeg.so \
+    -Wl,-soname,libnaxffmpeg.so \
     $FF_C_OBJ_FILES \
     $FF_ASM_OBJ_FILES \
     $FF_DEP_LIBS \
-    -o $FF_PREFIX/libijkffmpeg.so
+    -o $FF_PREFIX/libnaxffmpeg.so
 
 mysedi() {
     f=$1
@@ -369,7 +369,7 @@ echo "--------------------"
 rm -rf $FF_PREFIX/shared
 mkdir -p $FF_PREFIX/shared/lib/pkgconfig
 ln -s $FF_PREFIX/include $FF_PREFIX/shared/include
-ln -s $FF_PREFIX/libijkffmpeg.so $FF_PREFIX/shared/lib/libijkffmpeg.so
+ln -s $FF_PREFIX/libnaxffmpeg.so $FF_PREFIX/shared/lib/libnaxffmpeg.so
 cp $FF_PREFIX/lib/pkgconfig/*.pc $FF_PREFIX/shared/lib/pkgconfig
 for f in $FF_PREFIX/lib/pkgconfig/*.pc; do
     # in case empty dir
@@ -380,10 +380,10 @@ for f in $FF_PREFIX/lib/pkgconfig/*.pc; do
     f=$FF_PREFIX/shared/lib/pkgconfig/`basename $f`
     # OSX sed doesn't have in-place(-i)
     mysedi $f 's/\/output/\/output\/shared/g'
-    mysedi $f 's/-lavcodec/-lijkffmpeg/g'
-    mysedi $f 's/-lavfilter/-lijkffmpeg/g'
-    mysedi $f 's/-lavformat/-lijkffmpeg/g'
-    mysedi $f 's/-lavutil/-lijkffmpeg/g'
-    mysedi $f 's/-lswresample/-lijkffmpeg/g'
-    mysedi $f 's/-lswscale/-lijkffmpeg/g'
+    mysedi $f 's/-lavcodec/-lnaxffmpeg/g'
+    mysedi $f 's/-lavfilter/-lnaxffmpeg/g'
+    mysedi $f 's/-lavformat/-lnaxffmpeg/g'
+    mysedi $f 's/-lavutil/-lnaxffmpeg/g'
+    mysedi $f 's/-lswresample/-lnaxffmpeg/g'
+    mysedi $f 's/-lswscale/-lnaxffmpeg/g'
 done
