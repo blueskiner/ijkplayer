@@ -68,10 +68,10 @@ echo "--------------------"
 echo "[*] make NDK standalone toolchain"
 echo "--------------------"
 . ./tools/do-detect-env.sh
-FF_MAKE_TOOLCHAIN_FLAGS=$NAX_MAKE_TOOLCHAIN_FLAGS
-FF_MAKE_FLAGS=$NAX_MAKE_FLAG
-FF_GCC_VER=$NAX_GCC_VER
-FF_GCC_64_VER=$NAX_GCC_64_VER
+FF_MAKE_TOOLCHAIN_FLAGS=$IJK_MAKE_TOOLCHAIN_FLAGS
+FF_MAKE_FLAGS=$IJK_MAKE_FLAG
+FF_GCC_VER=$IJK_GCC_VER
+FF_GCC_64_VER=$IJK_GCC_64_VER
 
 
 #----- armv7a begin -----
