@@ -2,3 +2,5 @@ build
 ffmpeg-*
 libsoxr-*
 openssl-*
+x264-*
+fdk-aac-*
