@@ -40,7 +40,7 @@ fi
 
 
 FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-9
+FF_ANDROID_PLATFORM=android-21
 
 
 FF_BUILD_NAME=
@@ -51,6 +51,12 @@ FF_DEP_OPENSSL_LIB=
 
 FF_DEP_LIBSOXR_INC=
 FF_DEP_LIBSOXR_LIB=
+
+FF_DEP_X264_INC=
+FF_DEP_X264_LIB=
+
+FF_DEP_LIBFDK_AAC_INC=
+FF_DEP_LIBFDK_AAC_LIB=
 
 FF_CFG_FLAGS=
 
@@ -79,6 +85,8 @@ if [ "$FF_ARCH" = "armv7a" ]; then
     FF_BUILD_NAME=ffmpeg-armv7a
     FF_BUILD_NAME_OPENSSL=openssl-armv7a
     FF_BUILD_NAME_LIBSOXR=libsoxr-armv7a
+    FF_BUILD_NAME_X264=x264-armv7a
+    FF_BUILD_NAME_LIBFDK_AAC=fdk-aac-armv7a
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
     FF_CROSS_PREFIX=arm-linux-androideabi
@@ -97,6 +105,8 @@ elif [ "$FF_ARCH" = "armv5" ]; then
     FF_BUILD_NAME=ffmpeg-armv5
     FF_BUILD_NAME_OPENSSL=openssl-armv5
     FF_BUILD_NAME_LIBSOXR=libsoxr-armv5
+    FF_BUILD_NAME_X264=x264-armv5
+    FF_BUILD_NAME_LIBFDK_AAC=fdk-aac-armv5
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
     FF_CROSS_PREFIX=arm-linux-androideabi
@@ -113,6 +123,8 @@ elif [ "$FF_ARCH" = "x86" ]; then
     FF_BUILD_NAME=ffmpeg-x86
     FF_BUILD_NAME_OPENSSL=openssl-x86
     FF_BUILD_NAME_LIBSOXR=libsoxr-x86
+    FF_BUILD_NAME_X264=x264-x86
+    FF_BUILD_NAME_LIBFDK_AAC=fdk-aac-x86
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
     FF_CROSS_PREFIX=i686-linux-android
@@ -131,6 +143,8 @@ elif [ "$FF_ARCH" = "x86_64" ]; then
     FF_BUILD_NAME=ffmpeg-x86_64
     FF_BUILD_NAME_OPENSSL=openssl-x86_64
     FF_BUILD_NAME_LIBSOXR=libsoxr-x86_64
+    FF_BUILD_NAME_X264=x264-x86_64
+    FF_BUILD_NAME_LIBFDK_AAC=fdk-aac-x86_64
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
     FF_CROSS_PREFIX=x86_64-linux-android
@@ -149,6 +163,8 @@ elif [ "$FF_ARCH" = "arm64" ]; then
     FF_BUILD_NAME=ffmpeg-arm64
     FF_BUILD_NAME_OPENSSL=openssl-arm64
     FF_BUILD_NAME_LIBSOXR=libsoxr-arm64
+    FF_BUILD_NAME_X264=x264-arm64
+    FF_BUILD_NAME_LIBFDK_AAC=fdk-aac-arm64
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
     FF_CROSS_PREFIX=aarch64-linux-android
@@ -184,6 +200,10 @@ FF_DEP_OPENSSL_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_OPENSSL/output/include
 FF_DEP_OPENSSL_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_OPENSSL/output/lib
 FF_DEP_LIBSOXR_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBSOXR/output/include
 FF_DEP_LIBSOXR_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBSOXR/output/lib
+FF_DEP_X264_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_X264/output/include
+FF_DEP_X264_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_X264/output/lib
+FF_DEP_LIBFDK_AAC_INC=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBFDK_AAC/output/include
+FF_DEP_LIBFDK_AAC_LIB=$FF_BUILD_ROOT/build/$FF_BUILD_NAME_LIBFDK_AAC/output/lib
 
 case "$UNAME_S" in
     CYGWIN_NT-*)
@@ -256,6 +276,27 @@ if [ -f "${FF_DEP_LIBSOXR_LIB}/libsoxr.a" ]; then
 
     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_LIBSOXR_INC}"
     FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_LIBSOXR_LIB} -lsoxr"
+fi
+
+#--------------------
+# with x264
+if [ -f "${FF_DEP_X264_LIB}/libx264.a" ]; then
+    echo "libx264 detected"
+# FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-nonfree"
+    FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libx264"
+
+    FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_X264_INC}"
+    FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_X264_LIB} -lx264"
+fi
+
+#--------------------
+# with libfdk-aac
+if [ -f "${FF_DEP_LIBFDK_AAC_LIB}/libfdk-aac.a" ]; then
+    echo "libfdk-aac detected"
+    FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libfdk-aac"
+
+    FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_LIBFDK_AAC_INC}"
+    FF_DEP_LIBS="$FF_DEP_LIBS -lm -L${FF_DEP_LIBFDK_AAC_LIB} -lfdk-aac"
 fi
 
 FF_CFG_FLAGS="$FF_CFG_FLAGS $COMMON_FF_CFG_FLAGS"
@@ -347,11 +388,11 @@ do
 done
 
 $CC -lm -lz -shared --sysroot=$FF_SYSROOT -Wl,--no-undefined -Wl,-z,noexecstack $FF_EXTRA_LDFLAGS \
-    -Wl,-soname,libijkffmpeg.so \
+    -Wl,-soname,libcyffmpeg.so \
     $FF_C_OBJ_FILES \
     $FF_ASM_OBJ_FILES \
     $FF_DEP_LIBS \
-    -o $FF_PREFIX/libijkffmpeg.so
+    -o $FF_PREFIX/libcyffmpeg.so
 
 mysedi() {
     f=$1
@@ -369,7 +410,7 @@ echo "--------------------"
 rm -rf $FF_PREFIX/shared
 mkdir -p $FF_PREFIX/shared/lib/pkgconfig
 ln -s $FF_PREFIX/include $FF_PREFIX/shared/include
-ln -s $FF_PREFIX/libijkffmpeg.so $FF_PREFIX/shared/lib/libijkffmpeg.so
+ln -s $FF_PREFIX/libcyffmpeg.so $FF_PREFIX/shared/lib/libcyffmpeg.so
 cp $FF_PREFIX/lib/pkgconfig/*.pc $FF_PREFIX/shared/lib/pkgconfig
 for f in $FF_PREFIX/lib/pkgconfig/*.pc; do
     # in case empty dir
@@ -380,10 +421,10 @@ for f in $FF_PREFIX/lib/pkgconfig/*.pc; do
     f=$FF_PREFIX/shared/lib/pkgconfig/`basename $f`
     # OSX sed doesn't have in-place(-i)
     mysedi $f 's/\/output/\/output\/shared/g'
-    mysedi $f 's/-lavcodec/-lijkffmpeg/g'
-    mysedi $f 's/-lavfilter/-lijkffmpeg/g'
-    mysedi $f 's/-lavformat/-lijkffmpeg/g'
-    mysedi $f 's/-lavutil/-lijkffmpeg/g'
-    mysedi $f 's/-lswresample/-lijkffmpeg/g'
-    mysedi $f 's/-lswscale/-lijkffmpeg/g'
+    mysedi $f 's/-lavcodec/-lcyffmpeg/g'
+    mysedi $f 's/-lavfilter/-lcyffmpeg/g'
+    mysedi $f 's/-lavformat/-lcyffmpeg/g'
+    mysedi $f 's/-lavutil/-lcyffmpeg/g'
+    mysedi $f 's/-lswresample/-lcyffmpeg/g'
+    mysedi $f 's/-lswscale/-lcyffmpeg/g'
 done

@@ -12,15 +12,15 @@ Subject: [PATCH] x86_64: link prebuilt staic libraries of ffmepg
 
 diff --git a/android/ijkplayer/ijkplayer-java/src/main/java/tv/danmaku/ijk/media/player/IjkMediaPlayer.java b/android/ijkplayer/ijkplayer-java/src/main/java/tv/danmaku/ijk/media/player/IjkMediaPlayer.java
 index 985f848..7ad3fe4 100755
---- a/android/ijkplayer/ijkplayer-java/src/main/java/tv/danmaku/ijk/media/player/IjkMediaPlayer.java
-+++ b/android/ijkplayer/ijkplayer-java/src/main/java/tv/danmaku/ijk/media/player/IjkMediaPlayer.java
+--- a/android/ijkplayer/ijkplayer-java/src/main/java/com/nscy/media/player/IjkMediaPlayer.java
++++ b/android/ijkplayer/ijkplayer-java/src/main/java/com/nscy/media/player/IjkMediaPlayer.java
 @@ -165,7 +165,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                  if (libLoader == null)
                      libLoader = sLocalLibLoader;
  
--                libLoader.loadLibrary("ijkffmpeg");
-                 libLoader.loadLibrary("ijksdl");
-                 libLoader.loadLibrary("ijkplayer");
+-                libLoader.loadLibrary("cyffmpeg");
+                 libLoader.loadLibrary("cysdl");
+                 libLoader.loadLibrary("cyplayer");
                  mIsLibLoaded = true;
 diff --git a/android/ijkplayer/ijkplayer-x86_64/src/main/jni/ffmpeg/Android.mk b/android/ijkplayer/ijkplayer-x86_64/src/main/jni/ffmpeg/Android.mk
 index ec33908..3c525bd 100644
@@ -64,8 +64,8 @@ index ec33908..3c525bd 100644
 +include $(PREBUILT_STATIC_LIBRARY)
  
  include $(CLEAR_VARS)
--LOCAL_MODULE := ijkffmpeg
--LOCAL_SRC_FILES := $(MY_APP_FFMPEG_OUTPUT_PATH)/libijkffmpeg.so
+-LOCAL_MODULE := cyffmpeg
+-LOCAL_SRC_FILES := $(MY_APP_FFMPEG_OUTPUT_PATH)/libcyffmpeg.so
 -include $(PREBUILT_SHARED_LIBRARY)
 \ No newline at end of file
 +LOCAL_MODULE    := swresample
@@ -90,7 +90,7 @@ index 92372ab..6c9270d 100644
  LOCAL_SRC_FILES  += ijkavformat/ijklongurl.c
  LOCAL_SRC_FILES  += ijkavformat/ijksegment.c
  
--LOCAL_SHARED_LIBRARIES := ijkffmpeg ijksdl
+-LOCAL_SHARED_LIBRARIES := cyffmpeg cysdl
 -LOCAL_STATIC_LIBRARIES := android-ndk-profiler
 +LOCAL_SHARED_LIBRARIES := ijksdl
 +LOCAL_STATIC_LIBRARIES := avformat avcodec swscale swresample avfilter avutil android-ndk-profiler
@@ -105,7 +105,7 @@ index 08ebbab..4f6d804 100644
  LOCAL_SRC_FILES += android/ijksdl_vout_android_surface.c
  LOCAL_SRC_FILES += android/ijksdl_vout_overlay_android_mediacodec.c
  
--LOCAL_SHARED_LIBRARIES := ijkffmpeg ijkj4a
+-LOCAL_SHARED_LIBRARIES := cyffmpeg ijkj4a
 -LOCAL_STATIC_LIBRARIES := cpufeatures yuv_static
 +LOCAL_STATIC_LIBRARIES := avformat avcodec swscale swresample avfilter avutil cpufeatures yuv_static
 +LOCAL_SHARED_LIBRARIES := ijkj4a
