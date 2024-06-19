@@ -19,7 +19,7 @@
 #IJK_LIBFDK_AAC_UPSTREAM=https://github.com/mstorsjo/fdk-aac
 IJK_LIBFDK_AAC_UPSTREAM=https://github.com/mstorsjo/fdk-aac.git
 IJK_LIBFDK_AAC_FORK=https://github.com/mstorsjo/fdk-aac.git
-IJK_LIBFDK_AAC_COMMIT=v0.1.6
+IJK_LIBFDK_AAC_COMMIT=v2.0.3
 IJK_LIBFDK_AAC_LOCAL_REPO=extra/fdk-aac
 
 set -e

@@ -60,7 +60,7 @@ FF_DEP_LIBFDK_AAC_LIB=
 
 FF_CFG_FLAGS=
 
-FF_EXTRA_CFLAGS=
+FF_EXTRA_CFLAGS=-D__ANDROID_API__=21
 FF_EXTRA_LDFLAGS=
 FF_DEP_LIBS=
 
@@ -293,10 +293,10 @@ fi
 # with libfdk-aac
 if [ -f "${FF_DEP_LIBFDK_AAC_LIB}/libfdk-aac.a" ]; then
     echo "libfdk-aac detected"
-    FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libfdk-aac"
+    FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libfdk_aac"
 
     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_LIBFDK_AAC_INC}"
-    FF_DEP_LIBS="$FF_DEP_LIBS -lm -L${FF_DEP_LIBFDK_AAC_LIB} -lfdk-aac"
+    FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_LIBFDK_AAC_LIB} -lfdk-aac -lm -lz"
 fi
 
 FF_CFG_FLAGS="$FF_CFG_FLAGS $COMMON_FF_CFG_FLAGS"
